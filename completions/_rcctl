@@ -1,0 +1,24 @@
+#compdef rcctl
+
+local curcontext="$curcontext" state lstate line
+
+(( $+functions[_rcctl_action] )) || _rcctl_action()
+{
+	local -a _rcctl_actions
+
+	_rcctl_actions=(
+	    'start:start the service, if not already running'
+	    'stop:stop the service'
+	    'reload:tell the daemon to reload its configuration'
+	    'restart:perform a stop, then a start'
+	    'check:return 0 if the daemon is running or 1 if it is not'
+	)
+
+	_describe -t commands 'rcctl action' _rcctl_actions || compadd "$@"
+}
+
+_arguments -s \
+	'-d[show function names as well as stdin and stderr]' \
+	'-f[force start daemon]' \
+	'::rcctl action:_rcctl_action' \
+	'::service name:_services'
